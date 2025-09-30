@@ -2,8 +2,9 @@ backend:
   name: github
   repo: <ТВОЙ_ЛОГИН_GH>/<ИМЯ_РЕПО>   # пример: grigorybulgakov/star-wars-ttrpg
   branch: main
-  base_url: https://<ДОМЕН_АВТОРИЗАЦИИ>
-  auth_endpoint: /api/auth
+  backend.name: git-gateway
+  identity_url: https://auth.decapbridge.com/sites/838f2fa5-d281-46f1-b42f-c684786dcfe2
+  gateway_url: https://gateway.decapbridge.com
 
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
