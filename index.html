@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Star Wars TTRPG — Домашние правила</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0b0f14; --panel:#0f1520; --panel-2:#111a29; --text:#e6e8eb; --muted:#9aa4b2; --accent:#ffe81f; --accent-2:#49d0c6; --border:#223044; --shadow:0 10px 30px rgba(0,0,0,.35); }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{ margin:0; font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif; color:var(--text);
+      background: radial-gradient(1200px 800px at 50% -10%, #0f1723 0%, #0b0f14 50%, #090d12 100%), #0b0f14; line-height:1.65; -webkit-font-smoothing:antialiased; }
+    a{color:var(--accent-2)}
+    .container{max-width:900px;margin:24px auto;padding:24px}
+    .cover{background:linear-gradient(135deg, rgba(255,232,31,.08), rgba(73,208,198,.08)), linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.2)), var(--panel); border:1px solid var(--border); border-radius:18px; padding:48px 32px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
+    .cover:before,.cover:after{content:"";position:absolute;inset:auto -60px -60px auto;width:260px;height:260px; background:conic-gradient(from 210deg, rgba(255,232,31,.15), transparent 55%); transform:rotate(-10deg); filter:blur(6px)}
+    .cover:after{inset:-60px auto auto -60px;background:conic-gradient(from 30deg, rgba(73,208,198,.18), transparent 60%)}
+    .title{font-family:"Russo One",system-ui,sans-serif;letter-spacing:.02em;font-size:42px;margin:0 0 10px;text-transform:uppercase;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+    .subtitle{margin:0;color:var(--muted);font-weight:500}
+    .meta{margin-top:18px;color:var(--muted);font-size:14px}
+    .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
+    .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg, #111a26, #0e1520); color:var(--text);padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer; box-shadow:var(--shadow); transition:transform .06s ease, border-color .2s ease;}
+    .btn:hover{transform:translateY(-1px);border-color:#2a3a54}
+    .divider{height:2px;background:linear-gradient(90deg, transparent, var(--accent) 25%, var(--accent-2) 75%, transparent); margin:28px 0;border-radius:2px;opacity:.6}
+    .toc{background:linear-gradient(180deg, rgba(255,232,31,.06), rgba(73,208,198,.06)), var(--panel-2); border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+    .toc h2{font-family:"Russo One";margin:0 0 10px;font-size:18px;letter-spacing:.02em}
+    .toc ol{margin:0;padding-left:20px} .toc a{text-decoration:none}
+    main{margin-top:22px}
+    h1,h2,h3{font-family:"Russo One";letter-spacing:.02em}
+    h1{font-size:28px;margin:0 0 6px} h2{font-size:22px;margin:28px 0 8px} h3{font-size:18px;margin:18px 0 6px}
+    p{margin:10px 0}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15)), var(--panel); border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+    .callout{border-left:4px solid var(--accent);padding:12px 14px;background:rgba(255,232,31,.06);border-radius:10px}
+    .callout strong{letter-spacing:.02em}
+    .sw-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:12px;border:1px solid var(--border)}
+    .sw-table th,.sw-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+    .sw-table thead th{font-weight:700;text-align:left;background:rgba(255,232,31,.08)}
+    .sw-table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
+    .rule-tag{display:inline-block;border:1px solid var(--border);background:#0c131e;padding:2px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .page-break{break-after:page}
+    @page{size:A4;margin:16mm}
+    @media print{
+      body{background:#fff;color:#000}
+      .container{margin:0;max-width:100%;padding:0}
+      .cover,.panel,.toc{background:#fff;border-color:#ddd;box-shadow:none}
+      .title{text-shadow:none;color:#000}
+      a{color:#000;text-decoration:none}
+      .divider{background:#000;opacity:.1}
+      .callout{background:#f6f7f9;border-color:#000}
+      .btn,.toolbar,.no-print{display:none !important}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="cover">
+      <h1 class="title">Star Wars DnD — Домашние правила</h1>
+      <p class="subtitle">Версия 1.0 · для кампании/проекта: <em>укажите название</em></p>
+      <p class="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
+      <div class="toolbar no-print">
+        <button class="btn" onclick="window.print()">Печать в PDF</button>
+        <a class="btn" href="#toc">К оглавлению</a>
+        <a class="btn" href="#cms-root">К разделам</a>
+      </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <nav id="toc" class="toc">
+      <h2>Оглавление</h2>
+      <ol id="toc-list"><li><em>Генерируется автоматически…</em></li></ol>
+    </nav>
+
+    <main>
+      <div id="cms-root"><div class="panel"><p>Загрузка контента…</p></div></div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    marked.setOptions({ gfm: true, breaks: true });
+
+    function applyStyle(el, style={}, kind="panel"){
+      const { mt=16, mb=16, pad=18, text, accent, bg, bgImage, fontHead, fontBody, head, border, bar } = style || {};
+      el.style.marginTop = (mt||0)+'px';
+      el.style.marginBottom = (mb||0)+'px';
+      if(kind==="panel"){
+        el.style.padding = (pad||18)+'px';
+        if(bg) el.style.background = bg;
+        if(text) el.style.color = text;
+        if(bgImage){
+          el.style.backgroundImage = `url(${bgImage})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundRepeat = 'no-repeat';
+        }
+      }
+      if(kind==="callout"){
+        el.style.padding = (pad||12)+'px';
+        if(bg) el.style.background = bg;
+        if(bar) el.style.borderLeft = `4px solid ${bar}`;
+        if(text) el.style.color = text;
+      }
+      if(fontHead) el.style.setProperty('--font-head', fontHead);
+      if(fontBody) el.style.setProperty('--font-body', fontBody);
+    }
+
+    function renderSection(item){
+      const wrap = document.createElement('section');
+      wrap.className = 'panel';
+      applyStyle(wrap, item.style || {}, 'panel');
+      const h = document.createElement('h2');
+      h.textContent = item.title || 'Раздел';
+      const body = document.createElement('div');
+      body.innerHTML = marked.parse(item.body || '');
+      if(item.style && item.style.fontHead) h.style.fontFamily = item.style.fontHead;
+      if(item.style && item.style.fontBody) body.style.fontFamily = item.style.fontBody;
+      wrap.appendChild(h); wrap.appendChild(body);
+      return wrap;
+    }
+
+    function renderCallout(item){
+      const wrap = document.createElement('section');
+      applyStyle(wrap, item.style || {}, 'callout');
+      const inner = document.createElement('div');
+      inner.className = 'callout';
+      if(item.style && item.style.bar) inner.style.borderLeftColor = item.style.bar;
+      if(item.style && item.style.bg) inner.style.background = item.style.bg;
+      if(item.style && item.style.text) inner.style.color = item.style.text;
+      const h = document.createElement('h3');
+      h.textContent = item.title || 'Внимание';
+      const body = document.createElement('div');
+      body.innerHTML = marked.parse(item.text || '');
+      if(item.style && item.style.fontHead) h.style.fontFamily = item.style.fontHead;
+      if(item.style && item.style.fontBody) body.style.fontFamily = item.style.fontBody;
+      inner.appendChild(h); inner.appendChild(body); wrap.appendChild(inner);
+      return wrap;
+    }
+
+    function renderTable(item){
+      const wrap = document.createElement('section');
+      wrap.className = 'panel';
+      applyStyle(wrap, item.style || {}, 'panel');
+      const h = document.createElement('h2'); h.textContent = item.title || 'Таблица';
+      const table = document.createElement('table'); table.className='sw-table';
+      const thead = document.createElement('thead'); const trh = document.createElement('tr');
+      (item.columns||[]).forEach(c=>{ const th=document.createElement('th'); th.textContent=c; if(item.style && item.style.head) th.style.background=item.style.head; trh.appendChild(th); });
+      thead.appendChild(trh);
+      const tbody = document.createElement('tbody');
+      (item.rows||[]).forEach(r=>{
+        const tr=document.createElement('tr');
+        [r.c1,r.c2,r.c3,r.c4,r.c5,r.c6].filter(v=>v!==undefined).forEach(val=>{ const td=document.createElement('td'); td.textContent=val; tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(thead); table.appendChild(tbody);
+      wrap.appendChild(h); wrap.appendChild(table);
+      return wrap;
+    }
+
+    function regenerateTOC(){
+      const main = document.querySelector('main');
+      const toc = document.getElementById('toc-list');
+      if(!main || !toc) return;
+      toc.innerHTML = '';
+      const hs = main.querySelectorAll('h2, h3');
+      let ol = toc, lastLevel = 2;
+      hs.forEach((h, idx)=>{
+        const level = parseInt(h.tagName.substring(1),10);
+        if(!h.id) h.id = 'sec-' + (idx+1);
+        if(level > lastLevel){
+          const newOl = document.createElement('ol');
+          ol.lastElementChild && ol.lastElementChild.appendChild(newOl);
+          ol = newOl;
+        } else if(level < lastLevel){
+          ol = ol.parentElement.closest('ol') || ol;
+        }
+        lastLevel = level;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + h.id; a.textContent = h.textContent;
+        li.appendChild(a); ol.appendChild(li);
+      });
+    }
+
+    (async function(){
+      try{
+        const [sections, callouts, tables] = await Promise.all([
+          fetch('content/sections.json', {cache:'no-cache'}).then(r=>r.json()),
+          fetch('content/callouts.json', {cache:'no-cache'}).then(r=>r.json()),
+          fetch('content/tables.json', {cache:'no-cache'}).then(r=>r.json())
+        ]);
+        document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
+        const flat = [];
+        (sections.items||[]).forEach(x=>flat.push({type:'section', ...x}));
+        (callouts.items||[]).forEach(x=>flat.push({type:'callout', ...x}));
+        (tables.items||[]).forEach(x=>flat.push({type:'table', ...x}));
+        flat.sort((a,b)=>(a.order||0)-(b.order||0));
+
+        const root = document.getElementById('cms-root');
+        root.innerHTML='';
+        flat.forEach(item=>{
+          let node=null;
+          if(item.type==='section') node=renderSection(item);
+          else if(item.type==='callout') node=renderCallout(item);
+          else if(item.type==='table') node=renderTable(item);
+          if(node) root.appendChild(node);
+        });
+        regenerateTOC();
+      }catch(e){
+        console.error(e);
+        document.getElementById('cms-root').innerHTML = '<div class="panel"><p>Не удалось загрузить контент. Проверьте наличие файлов в папке <code>content</code>.</p></div>';
+      }
+    })();
+  </script>
+</body>
+</html>
