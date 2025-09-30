@@ -1,0 +1,112 @@
+backend:
+  name: github
+  repo: <ТВОЙ_ЛОГИН_GH>/<ИМЯ_РЕПО>   # пример: grigorybulgakov/star-wars-ttrpg
+  branch: main
+  base_url: https://<ДОМЕН_АВТОРИЗАЦИИ>
+  auth_endpoint: /api/auth
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - label: "Разделы страницы"
+    name: "sections"
+    files:
+      - label: "Разделы"
+        name: "sections"
+        file: "content/sections.json"
+        fields:
+          - label: "Секции"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.order}} — {{fields.title}}"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string" }
+              - { label: "Порядок (число)", name: "order", widget: "number", default: 1 }
+              - { label: "Содержимое (Markdown)", name: "body", widget: "markdown" }
+              - label: "Стиль"
+                name: "style"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
+                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
+                  - { label: "Внутренний отступ (px)", name: "pad", widget: "number", default: 18, min: 0 }
+                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
+                  - { label: "Цвет акцента", name: "accent", widget: "color", default: "#ffe81f", allowInput: true }
+                  - { label: "Цвет фона панели", name: "bg", widget: "color", default: "#0f1520", allowInput: true }
+                  - { label: "Изображение фона (URL)", name: "bgImage", widget: "string", required: false }
+                  - { label: "Шрифт заголовков", name: "fontHead", widget: "select", options: ["Russo One","Montserrat","Jura"], default: "Russo One" }
+                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
+
+  - label: "Особые секции (Callouts)"
+    name: "callouts"
+    files:
+      - label: "Callouts"
+        name: "callouts"
+        file: "content/callouts.json"
+        fields:
+          - label: "Callouts"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.order}} — {{fields.title}} ({{fields.variant}})"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string", default: "Внимание" }
+              - { label: "Порядок (число)", name: "order", widget: "number", default: 10 }
+              - { label: "Вариант", name: "variant", widget: "select", options: ["warning","info","success","danger"], default: "warning" }
+              - { label: "Текст (Markdown)", name: "text", widget: "markdown" }
+              - label: "Стиль"
+                name: "style"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
+                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
+                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
+                  - { label: "Цвет полосы слева", name: "bar", widget: "color", default: "#ffe81f", allowInput: true }
+                  - { label: "Фон блока", name: "bg", widget: "color", default: "rgba(255,232,31,.06)", allowInput: true }
+                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
+
+  - label: "Таблицы"
+    name: "tables"
+    files:
+      - label: "Таблицы"
+        name: "tables"
+        file: "content/tables.json"
+        fields:
+          - label: "Таблицы"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.order}} — {{fields.title}}"
+            fields:
+              - { label: "Заголовок", name: "title", widget: "string" }
+              - { label: "Порядок (число)", name: "order", widget: "number", default: 20 }
+              - label: "Колонки (3–6)"
+                name: "columns"
+                widget: "list"
+                min: 3
+                max: 6
+                field: { label: "Колонка", name: "col", widget: "string" }
+              - label: "Строки"
+                name: "rows"
+                widget: "list"
+                fields:
+                  - { label: "C1", name: "c1", widget: "string" }
+                  - { label: "C2", name: "c2", widget: "string" }
+                  - { label: "C3", name: "c3", widget: "text" }
+                  - { label: "C4 (опц.)", name: "c4", widget: "text", required: false }
+                  - { label: "C5 (опц.)", name: "c5", widget: "text", required: false }
+                  - { label: "C6 (опц.)", name: "c6", widget: "text", required: false }
+              - label: "Стиль"
+                name: "style"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
+                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
+                  - { label: "Фон панели", name: "bg", widget: "color", default: "#0f1520", allowInput: true }
+                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
+                  - { label: "Цвет шапки", name: "head", widget: "color", default: "rgba(255,232,31,.08)", allowInput: true }
+                  - { label: "Цвет границ", name: "border", widget: "color", default: "#223044", allowInput: true }
+                  - { label: "Шрифт заголовков", name: "fontHead", widget: "select", options: ["Russo One","Montserrat","Jura"], default: "Russo One" }
+                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
