@@ -36,7 +36,7 @@
     .sw-table th,.sw-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
     .sw-table thead th{font-weight:700;text-align:left;background:rgba(255,232,31,.08)}
     .sw-table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-    .rule-tag{display:inline-block;border:1px solid var(--border);background:#0c131e;padding:2px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .rule-tag{display:inline-block;border:1px solid var(--border);background:#0c131e;padding:2px 8px;border-radius:999px;font-size:12px;color:#9aa4b2}
     .page-break{break-after:page}
     @page{size:A4;margin:16mm}
     @media print{
@@ -55,10 +55,10 @@
   <div class="container">
     <header class="cover">
       <h1 class="title">Star Wars DnD — Домашние правила</h1>
-      <p class="subtitle">Версия 1.0 · для кампании/проекта: <em>укажите название</em></p>
+      <p class="subtitle">Версия 1.0 · Кампания: укажите название</p>
       <p class="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
-      <div class="toolbar no-print">
-        <button class="btn" onclick="window.print()">Печать в PDF</button>
+      <div class="toolbar no-print" id="toolbar">
+        <button class="btn" id="btn-print" onclick="window.print()">Печать в PDF</button>
         <a class="btn" href="#toc">К оглавлению</a>
         <a class="btn" href="#cms-root">К разделам</a>
       </div>
@@ -123,11 +123,9 @@
       applyStyle(wrap, item.style || {}, 'callout');
       const inner = document.createElement('div');
       inner.className = 'callout';
-      if(item.style && item.style.bar) inner.style.borderLeftColor = item.style.bar;
-      if(item.style && item.style.bg) inner.style.background = item.style.bg;
-      if(item.style && item.style.text) inner.style.color = item.style.text;
       const h = document.createElement('h3');
       h.textContent = item.title || 'Внимание';
+      h.setAttribute('data-toc','callout');
       const body = document.createElement('div');
       body.innerHTML = marked.parse(item.text || '');
       if(item.style && item.style.fontHead) h.style.fontFamily = item.style.fontHead;
@@ -156,26 +154,26 @@
       return wrap;
     }
 
-    function regenerateTOC(){
+    function regenerateTOC(settings){
       const main = document.querySelector('main');
       const toc = document.getElementById('toc-list');
       if(!main || !toc) return;
+
+      const levels = (settings?.toc?.levels?.length ? settings.toc.levels : [2,3]).sort();
+      const selector = levels.map(l => `h${l}`).join(', ');
+      let hs = [...main.querySelectorAll(selector)];
+      if(settings?.toc?.excludeCallouts){
+        hs = hs.filter(h => h.getAttribute('data-toc') !== 'callout');
+      }
       toc.innerHTML = '';
-      const hs = main.querySelectorAll('h2, h3');
-      let ol = toc, lastLevel = 2;
+      let ol = toc, lastLevel = Math.min(...levels);
       hs.forEach((h, idx)=>{
         const level = parseInt(h.tagName.substring(1),10);
         if(!h.id) h.id = 'sec-' + (idx+1);
-        if(level > lastLevel){
-          const newOl = document.createElement('ol');
-          ol.lastElementChild && ol.lastElementChild.appendChild(newOl);
-          ol = newOl;
-        } else if(level < lastLevel){
-          ol = ol.parentElement.closest('ol') || ol;
-        }
+        if(level > lastLevel){ const newOl = document.createElement('ol'); ol.lastElementChild && ol.lastElementChild.appendChild(newOl); ol = newOl; }
+        else if(level < lastLevel){ ol = ol.parentElement.closest('ol') || ol; }
         lastLevel = level;
-        const li = document.createElement('li');
-        const a = document.createElement('a');
+        const li = document.createElement('li'); const a = document.createElement('a');
         a.href = '#' + h.id; a.textContent = h.textContent;
         li.appendChild(a); ol.appendChild(li);
       });
@@ -183,31 +181,64 @@
 
     (async function(){
       try{
-        const [sections, callouts, tables] = await Promise.all([
-          fetch('content/sections.json', {cache:'no-cache'}).then(r=>r.json()),
-          fetch('content/callouts.json', {cache:'no-cache'}).then(r=>r.json()),
-          fetch('content/tables.json', {cache:'no-cache'}).then(r=>r.json())
+        const [settings, sections, callouts, tables] = await Promise.all([
+          fetch('content/settings.json',{cache:'no-cache'}).then(r=>r.json()),
+          fetch('content/sections.json',{cache:'no-cache'}).then(r=>r.json()),
+          fetch('content/callouts.json',{cache:'no-cache'}).then(r=>r.json()),
+          fetch('content/tables.json',{cache:'no-cache'}).then(r=>r.json())
         ]);
-        document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
-        const flat = [];
-        (sections.items||[]).forEach(x=>flat.push({type:'section', ...x}));
-        (callouts.items||[]).forEach(x=>flat.push({type:'callout', ...x}));
-        (tables.items||[]).forEach(x=>flat.push({type:'table', ...x}));
-        flat.sort((a,b)=>(a.order||0)-(b.order||0));
+
+        if (settings?.pageTitle) document.title = settings.pageTitle;
+        if (settings?.cover){
+          const { title, subtitle, author, showPrintButton } = settings.cover;
+          const cover = document.querySelector('.cover');
+          if(title) cover.querySelector('.title').textContent = title;
+          if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
+          const meta = cover.querySelector('.meta');
+          const dateStr = new Date().toLocaleDateString('ru-RU');
+          meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
+          if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
+        } else {
+          document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
+        }
 
         const root = document.getElementById('cms-root');
         root.innerHTML='';
-        flat.forEach(item=>{
-          let node=null;
-          if(item.type==='section') node=renderSection(item);
-          else if(item.type==='callout') node=renderCallout(item);
-          else if(item.type==='table') node=renderTable(item);
-          if(node) root.appendChild(node);
-        });
-        regenerateTOC();
+        const sectionNodes = {};
+        (sections.items||[])
+          .sort((a,b)=>(a.order||0)-(b.order||0))
+          .forEach(item=>{
+            const id = (item.id && String(item.id).trim()) ||
+                       (item.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+            const node = renderSection(item);
+            if(id) node.id = id;
+            sectionNodes[id] = node;
+            root.appendChild(node);
+          });
+
+        (callouts.items||[])
+          .sort((a,b)=>(a.order||0)-(b.order||0))
+          .forEach(item=>{
+            const parent = item.parent && String(item.parent).trim();
+            const node = renderCallout(item);
+            if(parent && sectionNodes[parent]) sectionNodes[parent].appendChild(node);
+            else root.appendChild(node);
+          });
+
+        (tables.items||[])
+          .sort((a,b)=>(a.order||0)-(b.order||0))
+          .forEach(item=>{
+            const parent = item.parent && String(item.parent).trim();
+            const node = renderTable(item);
+            if(parent && sectionNodes[parent]) sectionNodes[parent].appendChild(node);
+            else root.appendChild(node);
+          });
+
+        regenerateTOC(settings);
       }catch(e){
         console.error(e);
-        document.getElementById('cms-root').innerHTML = '<div class="panel"><p>Не удалось загрузить контент. Проверьте наличие файлов в папке <code>content</code>.</p></div>';
+        document.getElementById('cms-root').innerHTML =
+          '<div class="panel"><p>Не удалось загрузить контент. Проверьте папку <code>content</code>.</p></div>';
       }
     })();
   </script>
