@@ -41,6 +41,9 @@
       .container{margin:0;max-width:100%;padding:0}
       .cover,.panel,.toc{background:#fff;border-color:#ddd;box-shadow:none}
       .title{text-shadow:none;color:#000}
+      a{color:#000;text-decoration:none}
+      .divider{background:#000;opacity:.1}
+      .callout{background:#f6f7f9;border-color:#000}
       .btn,.toolbar,.no-print{display:none !important}
     }
     .error{margin-top:16px;padding:12px 14px;border-radius:10px;background:#3a1111;border:1px solid #5b1a1a;color:#ffdcdc}
@@ -49,11 +52,11 @@
 <body>
   <div class="container">
     <header class="cover">
-      <h1 class="title">Star Wars DnD — Домашние правила</h1>
-      <p class="subtitle">Версия 1.0 · Кампания: укажите название</p>
-      <p class="meta" id="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
-      <div class="toolbar no-print">
-        <button class="btn" onclick="window.print()">Печать в PDF</button>
+      <h1 class="title" id="cover-title">Star Wars DnD — Домашние правила</h1>
+      <p class="subtitle" id="cover-subtitle">Версия 1.0 · Кампания: укажите название</p>
+      <p class="meta" id="cover-meta">Автор: вы · Последнее обновление: <span id="cover-date">—</span></p>
+      <div class="toolbar no-print" id="toolbar">
+        <button class="btn" id="btn-print" onclick="window.print()">Печать в PDF</button>
         <a class="btn" href="#toc">К оглавлению</a>
         <a class="btn" href="#sections-root">К разделам</a>
       </div>
@@ -67,16 +70,17 @@
     </nav>
 
     <main>
-      <div id="sections-root"><div class="panel"><p>Загрузка…</p></div></div>
+      <!-- ТВОИ РАЗДЕЛЫ/КОНТЕНТ: оставляй как есть -->
+      <div id="sections-root">
+        <!-- пример: можно оставить твои текущие секции как в статическом шаблоне -->
+      </div>
       <div id="errors"></div>
     </main>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    marked.setOptions({ gfm:true, breaks:true });
-
-    const showError = msg => {
+    // Утилита ошибок
+    const showError = (msg) => {
       const box = document.getElementById('errors');
       const div = document.createElement('div');
       div.className = 'error';
@@ -84,97 +88,48 @@
       box.appendChild(div);
     };
 
-    const el = (tag, cls) => { const x=document.createElement(tag); if(cls) x.className=cls; return x; };
+    // Подставляем титульные поля из content/settings.json
+    async function loadSettings(){
+      try{
+        const res = await fetch('./content/settings.json', {cache:'no-cache'});
+        if(!res.ok) throw new Error(`settings.json → HTTP ${res.status}`);
+        const s = await res.json();
 
-    function applyBoxStyle(node, style={}){
-      const { mt=16, mb=16, pad=18, bg, text } = style;
-      node.style.marginTop = mt+'px';
-      node.style.marginBottom = mb+'px';
-      if(pad!=null) node.style.padding = pad+'px';
-      if(bg) node.style.background = bg;
-      if(text) node.style.color = text;
+        // заголовок вкладки
+        if (s.pageTitle) document.title = s.pageTitle;
+
+        // обложка
+        const cov = s.cover || {};
+        const titleEl = document.getElementById('cover-title');
+        const subtitleEl = document.getElementById('cover-subtitle');
+        const metaEl = document.getElementById('cover-meta');
+        const dateSpan = document.getElementById('cover-date');
+
+        if (cov.title) titleEl.textContent = cov.title;
+        if (cov.subtitle) subtitleEl.innerHTML = cov.subtitle;
+        const dateStr = (cov.dateMode === 'manual' && cov.dateText && cov.dateText.trim())
+          ? cov.dateText.trim()
+          : new Date().toLocaleDateString('ru-RU');
+        const author = cov.author || 'Автор: вы';
+        metaEl.innerHTML = `${author} · Последнее обновление: <span id="cover-date">${dateStr}</span>`;
+
+        if (cov.showPrintButton === false) document.getElementById('btn-print').style.display='none';
+      }catch(e){
+        showError('Не удалось подгрузить content/settings.json: ' + e.message);
+      }
     }
 
-    function hTag(level, text){ const h = document.createElement('h'+level); h.textContent=text; return h; }
-
-    function renderBlock(block){
-      const type = block.type || 'markdown';
-
-      if(type === 'markdown'){
-        const box = el('div');
-        applyBoxStyle(box, block.style);
-        box.innerHTML = marked.parse(block.body||'');
-        return box;
-      }
-
-      if(type === 'subheading'){
-        const lvl = block.tocLevel===3 ? 3 : 2;
-        const h = hTag(lvl, block.title||'Подзаголовок');
-        if(block.includeInTOC===false) h.setAttribute('data-toc','off');
-        return h;
-      }
-
-      if(type === 'callout'){
-        const wrap = el('div','callout'); applyBoxStyle(wrap, block.style);
-        if(block.title){ const h = hTag(block.tocLevel===3?3:2, block.title); if(block.includeInTOC===false) h.setAttribute('data-toc','off'); wrap.appendChild(h); }
-        const inner = el('div'); inner.innerHTML = marked.parse(block.text||''); wrap.appendChild(inner);
-        return wrap;
-      }
-
-      if(type === 'table'){
-        const wrap = el('div'); applyBoxStyle(wrap, block.style);
-        if(block.title){ const h = hTag(block.tocLevel===3?3:2, block.title); if(block.includeInTOC===false) h.setAttribute('data-toc','off'); wrap.appendChild(h); }
-        const tbl = el('table','sw-table');
-        const thead = el('thead'); const trh = el('tr');
-        (block.columns||[]).forEach(c=>{ const th=el('th'); th.textContent=c; trh.appendChild(th); });
-        thead.appendChild(trh); tbl.appendChild(thead);
-        const tbody = el('tbody');
-        (block.rows||[]).forEach(r=>{
-          const tr=el('tr');
-          (r||[]).forEach(v=>{ const td=el('td'); td.textContent=v; tr.appendChild(td); });
-          tbody.appendChild(tr);
-        });
-        tbl.appendChild(tbody); wrap.appendChild(tbl);
-        return wrap;
-      }
-
-      // fallback
-      const box = el('div'); box.textContent = '[неизвестный блок]'; return box;
-    }
-
-    function renderSection(section){
-      const panel = el('section','panel'); applyBoxStyle(panel, section.style);
-      // заголовок H2, можно скрыть (empty title)
-      if(section.title){
-        const h = hTag(2, section.title);
-        if(section.includeInTOC === false) h.setAttribute('data-toc','off');
-        panel.appendChild(h);
-      }
-
-      (section.blocks||[]).forEach(b => {
-        const node = renderBlock(b);
-        panel.appendChild(node);
-      });
-
-      return panel;
-    }
-
-    function regenTOC(settings){
+    // Автогенерация оглавления из H2/H3 на странице
+    function buildTOC(){
       const main = document.querySelector('main');
       const toc = document.getElementById('toc-list');
       if(!main || !toc) return;
-
-      const levels = (settings?.toc?.levels?.length ? settings.toc.levels : [2,3]).sort();
-      const selector = levels.map(l => `h${l}`).join(', ');
-      let hs = [...main.querySelectorAll(selector)];
-      // исключать элементы, помеченные data-toc="off"
-      hs = hs.filter(h => h.getAttribute('data-toc') !== 'off');
-
       toc.innerHTML = '';
-      let ol = toc, lastLevel = Math.min(...levels);
-      hs.forEach((h, idx)=>{
+      const hs = main.querySelectorAll('h2, h3');
+      let ol = toc; let lastLevel = 2;
+      hs.forEach((h, i)=>{
         const level = parseInt(h.tagName.substring(1),10);
-        if(!h.id) h.id = 'sec-' + (idx+1);
+        if(!h.id) h.id = 'sec-' + (i+1);
         if(level > lastLevel){ const newOl = document.createElement('ol'); ol.lastElementChild && ol.lastElementChild.appendChild(newOl); ol = newOl; }
         else if(level < lastLevel){ ol = ol.parentElement.closest('ol') || ol; }
         lastLevel = level;
@@ -184,40 +139,9 @@
       });
     }
 
-    async function getJSON(path){
-      const r = await fetch(path, {cache:'no-cache'});
-      if(!r.ok){ showError(`${path}: HTTP ${r.status}`); throw new Error(path); }
-      return r.json();
-    }
-
     (async function(){
-      try{
-        const [settings, sectionsFile] = await Promise.all([
-          getJSON('./content/settings.json'),
-          getJSON('./content/sections.json')
-        ]);
-
-        // Обложка: автор/дата управляются из settings
-        if (settings?.pageTitle) document.title = settings.pageTitle;
-        if (settings?.cover){
-          const meta = document.getElementById('meta');
-          const { author, dateMode, dateText } = settings.cover;
-          const dateStr = (dateMode === 'manual' && dateText?.trim()) ? dateText.trim() : new Date().toLocaleDateString('ru-RU');
-          meta.innerHTML = `${author || 'Автор: вы'} · Последнее обновление: <span>${dateStr}</span>`;
-        }
-
-        const root = document.getElementById('sections-root');
-        root.innerHTML = '';
-        (sectionsFile.items||[])
-          .sort((a,b)=>(a.order||0)-(b.order||0))
-          .forEach(sec=>{
-            const node = renderSection(sec);
-            if(sec.id) node.id = sec.id;
-            root.appendChild(node);
-          });
-
-        regenTOC(settings);
-      }catch(e){}
+      await loadSettings();
+      buildTOC();
     })();
   </script>
 </body>
