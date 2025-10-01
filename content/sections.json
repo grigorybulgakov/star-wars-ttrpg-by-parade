@@ -4,33 +4,15 @@
       "title": "Общие положения",
       "id": "basics",
       "order": 1,
-      "body": "Этот документ содержит домашние правила для **Star Wars DnD Edition**. Ниже — базовые принципы, терминология и структура. Туц",
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "pad": 18,
-        "text": "#e6e8eb",
-        "accent": "#ffe81f",
-        "bg": "#0f1520",
-        "fontHead": "Russo One",
-        "fontBody": "Montserrat"
-      }
+      "body": "Этот документ содержит домашние правила для **Star Wars DnD Edition**. Ниже — базовые принципы, терминология и структура.",
+      "style": { "mt": 16, "mb": 16, "pad": 18, "text": "#e6e8eb", "accent": "#ffe81f", "bg": "#0f1520", "fontHead": "Russo One", "fontBody": "Montserrat" }
     },
     {
       "title": "Создание персонажа",
       "id": "characters",
       "order": 2,
       "body": "Опишите допустимые расы, классы, архетипы и ограничения. Учтите эпоху кампании.",
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "pad": 18,
-        "text": "#e6e8eb",
-        "accent": "#ffe81f",
-        "bg": "#0f1520",
-        "fontHead": "Russo One",
-        "fontBody": "Montserrat"
-      }
+      "style": { "mt": 16, "mb": 16, "pad": 18 }
     }
   ]
 }
