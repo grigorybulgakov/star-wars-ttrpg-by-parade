@@ -1,36 +1,73 @@
 {
   "items": [
     {
-      "title": "Healt Bar",
+      "title": "Общие положения",
       "id": "basics",
       "order": 1,
-      "body": "Этот документ содержит домашние правила для **Star Wars DnD Edition**. Ниже — базовые принципы, терминология и структура.",
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "pad": 18,
-        "text": "#e6e8eb",
-        "accent": "#ffe81f",
-        "bg": "#0f1520",
-        "fontHead": "Russo One",
-        "fontBody": "Montserrat"
-      }
+      "includeInTOC": true,
+      "style": { "mt": 16, "mb": 16, "pad": 18 },
+      "blocks": [
+        {
+          "type": "markdown",
+          "body": "Этот документ содержит домашние правила для **Star Wars DnD Edition**. Ниже — базовые принципы, терминология и структура."
+        },
+        {
+          "type": "callout",
+          "title": "Внимание",
+          "includeInTOC": false,
+          "tocLevel": 3,
+          "text": "> **Избегайте** официальных логотипов/кадров. Лучше абстрактные текстуры — панели корабля, звёзды."
+        }
+      ]
     },
     {
       "title": "Создание персонажа",
       "id": "characters",
       "order": 2,
-      "body": "Опишите допустимые расы, классы, архетипы и ограничения. Учтите эпоху кампании.",
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "pad": 18,
-        "text": "#e6e8eb",
-        "accent": "#ffe81f",
-        "bg": "#0f1520",
-        "fontHead": "Russo One",
-        "fontBody": "Montserrat"
-      }
+      "includeInTOC": true,
+      "blocks": [
+        {
+          "type": "subheading",
+          "title": "Атрибуты и модификаторы",
+          "includeInTOC": true,
+          "tocLevel": 3
+        },
+        {
+          "type": "table",
+          "title": "Быстрые правила",
+          "includeInTOC": false,
+          "tocLevel": 3,
+          "columns": ["Параметр","База","Домашнее правило"],
+          "rows": [
+            ["Здоровье","По классу","Мин. на уровне = половина КЗ (округл. вверх)"],
+            ["Инициатива","Ловк.","+ бонус тренированного сенсора (если есть)"],
+            ["Языки","Стартовые","+1 тематический (по фону)"]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "",
+      "id": "between",
+      "order": 2.5,
+      "includeInTOC": false,
+      "blocks": [
+        {
+          "type": "markdown",
+          "body": "_Этот раздел без заголовка служит для контента **между** основными разделами._"
+        },
+        {
+          "type": "table",
+          "title": "Вставка между разделами (показывать в TOC)",
+          "includeInTOC": true,
+          "tocLevel": 2,
+          "columns": ["Колонка A","B","C"],
+          "rows": [
+            ["1","2","3"],
+            ["4","5","6"]
+          ]
+        }
+      ]
     }
   ]
 }
