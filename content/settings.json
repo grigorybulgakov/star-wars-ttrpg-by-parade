@@ -2,11 +2,11 @@
   "pageTitle": "Star Wars TTRPG — Домашние правила",
   "cover": {
     "title": "STAR WARS TTRPG",
-    "subtitle": "Версия 1.0 · Кампания: укажите название",
-    "author": "Автор: вы",
-    "dateMode": "manual",
-    "dateText": "01.10.2025",
-    "showPrintButton": false
+    "subtitle": "Версия 1.0",
+    "author": "Григорий Булгаков",
+    "dateMode": "auto",
+    "dateText": "",
+    "showPrintButton": true
   },
   "toc": {
     "levels": [
