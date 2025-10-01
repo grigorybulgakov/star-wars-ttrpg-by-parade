@@ -187,16 +187,22 @@
           fetch('content/tables.json',{cache:'no-cache'}).then(r=>r.json())
         ]);
 
-        if (settings?.pageTitle) document.title = settings.pageTitle;
         if (settings?.cover){
-          const { title, subtitle, author, showPrintButton } = settings.cover;
-          const cover = document.querySelector('.cover');
-          if(title) cover.querySelector('.title').textContent = title;
-          if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
-          const meta = cover.querySelector('.meta');
-          const dateStr = new Date().toLocaleDateString('ru-RU');
-          meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
-          if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
+  const { title, subtitle, author, showPrintButton, dateMode, dateText } = settings.cover;
+  const cover = document.querySelector('.cover');
+  if(title) cover.querySelector('.title').textContent = title;
+  if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
+
+  const meta = cover.querySelector('.meta');
+  const dateStr = (dateMode === 'manual' && dateText && dateText.trim())
+    ? dateText.trim()
+    : new Date().toLocaleDateString('ru-RU');
+
+  meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
+
+  if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
+}
+
         } else {
           document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
         }
