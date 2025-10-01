@@ -7,7 +7,7 @@ backend:
   gateway_url: https://gateway.decapbridge.com
 
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-site_url: https://grigorybulgakov.github.io
+site_url: https://grigorybulgakov.github.io/star-wars-ttrpg-by-parade/
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
