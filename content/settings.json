@@ -4,7 +4,7 @@
     "title": "Star Wars DnD — Домашние правила",
     "subtitle": "Версия 1.0 · Кампания: <em>укажите название</em>",
     "author": "Автор: ГМ Имя Фамилия",
-    "dateMode": "manual",            // "auto" — сегодняшняя; "manual" — использовать dateText
+    "dateMode": "manual",            // "auto"
     "dateText": "01.10.2025",
     "showPrintButton": true
   }
