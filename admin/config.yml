@@ -1,4 +1,3 @@
-# ==== Авторизация через DecapBridge (git-gateway) ====
 backend:
   name: git-gateway
   repo: grigorybulgakov/star-wars-ttrpg-by-parade
@@ -6,12 +5,11 @@ backend:
   identity_url: https://auth.decapbridge.com/sites/838f2fa5-d281-46f1-b42f-c684786dcfe2
   gateway_url: https://gateway.decapbridge.com
 
-logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 site_url: https://grigorybulgakov.github.io/star-wars-ttrpg-by-parade/
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
-# ==== Коллекции ====
 collections:
   - label: "Настройки страницы"
     name: "settings"
@@ -25,18 +23,15 @@ collections:
             name: "cover"
             widget: "object"
             fields:
-              - { label: "Заголовок на обложке", name: "title", widget: "string" }
-              - { label: "Подзаголовок", name: "subtitle", widget: "string" }
+              - { label: "Заголовок на обложке", name: "title", widget: "string", required: false }
+              - { label: "Подзаголовок", name: "subtitle", widget: "string", required: false }
               - { label: "Автор / подпись", name: "author", widget: "string", default: "Автор: вы" }
-              - label: "Режим даты обновления"
+              - label: "Режим даты"
                 name: "dateMode"
                 widget: "select"
-                options:
-                  - { label: "Авто (сегодня)", value: "auto" }
-                  - { label: "Ручная (из поля ниже)", value: "manual" }
+                options: [ {label: "Авто (сегодня)", value: "auto"}, {label: "Ручная", value: "manual"} ]
                 default: "manual"
-              - { label: "Дата (ДД.ММ.ГГГГ или любой текст)", name: "dateText", widget: "string", required: false, hint: "Пример: 01.10.2025" }
-              - { label: "Показывать кнопку «Печать в PDF»", name: "showPrintButton", widget: "boolean", default: true }
+              - { label: "Дата (ДД.ММ.ГГГГ или текст)", name: "dateText", widget: "string", required: false }
           - label: "Оглавление (TOC)"
             name: "toc"
             widget: "object"
@@ -45,16 +40,13 @@ collections:
                 name: "levels"
                 widget: "select"
                 multiple: true
-                options:
-                  - { label: "H2", value: 2 }
-                  - { label: "H3", value: 3 }
+                options: [ {label: "H2", value: 2}, {label: "H3", value: 3} ]
                 default: [2,3]
-              - { label: "Исключать заголовки callout из TOC", name: "excludeCallouts", widget: "boolean", default: true }
 
-  - label: "Разделы страницы"
+  - label: "Разделы"
     name: "sections"
     files:
-      - label: "Разделы"
+      - label: "Список разделов"
         name: "sections"
         file: "content/sections.json"
         fields:
@@ -63,95 +55,112 @@ collections:
             widget: "list"
             summary: "{{fields.order}} — {{fields.title}}"
             fields:
-              - { label: "Заголовок", name: "title", widget: "string" }
-              - { label: "ID (якорь секции)", name: "id", widget: "string", required: false, hint: "латиница и дефисы, напр. basics, gear, ships" }
+              - { label: "Заголовок раздела (можно пусто)", name: "title", widget: "string", required: false }
+              - { label: "ID (якорь)", name: "id", widget: "string", required: false }
               - { label: "Порядок", name: "order", widget: "number", default: 1, min: 0 }
-              - { label: "Содержимое (Markdown)", name: "body", widget: "markdown" }
-              - label: "Стиль"
+              - { label: "Показывать раздел в оглавлении", name: "includeInTOC", widget: "boolean", default: true, required: false }
+              - label: "Стиль раздела"
                 name: "style"
                 widget: "object"
                 collapsed: true
+                required: false
                 fields:
-                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
-                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
-                  - { label: "Внутренний отступ (px)", name: "pad", widget: "number", default: 18, min: 0 }
-                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
-                  - { label: "Цвет акцента", name: "accent", widget: "color", default: "#ffe81f", allowInput: true }
-                  - { label: "Цвет фона панели", name: "bg", widget: "color", default: "#0f1520", allowInput: true }
-                  - { label: "Изображение фона (URL)", name: "bgImage", widget: "string", required: false }
-                  - { label: "Шрифт заголовков", name: "fontHead", widget: "select", options: ["Russo One","Montserrat","Jura"], default: "Russo One" }
-                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
+                  - { label: "Верхний отступ", name: "mt", widget: "number", default: 16, min: 0 }
+                  - { label: "Нижний отступ", name: "mb", widget: "number", default: 16, min: 0 }
+                  - { label: "Внутренний отступ", name: "pad", widget: "number", default: 18, min: 0 }
+                  - { label: "Цвет фона", name: "bg", widget: "color", required: false, allowInput: true }
+                  - { label: "Цвет текста", name: "text", widget: "color", required: false, allowInput: true }
 
-  - label: "Особые секции (Callouts)"
-    name: "callouts"
-    files:
-      - label: "Callouts"
-        name: "callouts"
-        file: "content/callouts.json"
-        fields:
-          - label: "Callouts"
-            name: "items"
-            widget: "list"
-            summary: "{{fields.order}} — {{fields.title}} ({{fields.variant}})"
-            fields:
-              - { label: "Заголовок", name: "title", widget: "string", default: "Внимание" }
-              - { label: "Порядок", name: "order", widget: "number", default: 10, min: 0 }
-              - { label: "Родительский ID (вставить в секцию)", name: "parent", widget: "string", required: false, hint: "совпадает с ID секции" }
-              - { label: "Вариант", name: "variant", widget: "select", options: ["warning","info","success","danger"], default: "warning" }
-              - { label: "Текст (Markdown)", name: "text", widget: "markdown" }
-              - label: "Стиль"
-                name: "style"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
-                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
-                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
-                  - { label: "Цвет полосы слева", name: "bar", widget: "color", default: "#ffe81f", allowInput: true }
-                  - { label: "Фон блока", name: "bg", widget: "color", default: "rgba(255,232,31,.06)", allowInput: true }
-                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
+              - label: "Блоки раздела"
+                name: "blocks"
+                widget: "list"
+                types:
+                  - label: "Markdown"
+                    name: "markdown"
+                    widget: "object"
+                    fields:
+                      - { label: "Тип", name: "type", widget: "hidden", default: "markdown" }
+                      - { label: "Текст (Markdown)", name: "body", widget: "markdown" }
+                      - label: "Стиль"
+                        name: "style"
+                        widget: "object"
+                        required: false
+                        collapsed: true
+                        fields:
+                          - { label: "Верхний отступ", name: "mt", widget: "number", default: 16, min: 0 }
+                          - { label: "Нижний отступ", name: "mb", widget: "number", default: 16, min: 0 }
+                          - { label: "Внутренний отступ", name: "pad", widget: "number", default: 18, min: 0 }
+                          - { label: "Цвет фона", name: "bg", widget: "color", required: false }
+                          - { label: "Цвет текста", name: "text", widget: "color", required: false }
 
-  - label: "Таблицы"
-    name: "tables"
-    files:
-      - label: "Таблицы"
-        name: "tables"
-        file: "content/tables.json"
-        fields:
-          - label: "Таблицы"
-            name: "items"
-            widget: "list"
-            summary: "{{fields.order}} — {{fields.title}}"
-            fields:
-              - { label: "Заголовок", name: "title", widget: "string" }
-              - { label: "Порядок", name: "order", widget: "number", default: 20, min: 0 }
-              - { label: "Родительский ID (вставить в секцию)", name: "parent", widget: "string", required: false }
-              - label: "Колонки (3–6)"
-                name: "columns"
-                widget: "list"
-                min: 3
-                max: 6
-                field: { label: "Колонка", name: "col", widget: "string" }
-              - label: "Строки"
-                name: "rows"
-                widget: "list"
-                fields:
-                  - { label: "C1", name: "c1", widget: "string" }
-                  - { label: "C2", name: "c2", widget: "string" }
-                  - { label: "C3", name: "c3", widget: "text" }
-                  - { label: "C4 (опц.)", name: "c4", widget: "text", required: false }
-                  - { label: "C5 (опц.)", name: "c5", widget: "text", required: false }
-                  - { label: "C6 (опц.)", name: "c6", widget: "text", required: false }
-              - label: "Стиль"
-                name: "style"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - { label: "Верхний отступ (px)", name: "mt", widget: "number", default: 16, min: 0 }
-                  - { label: "Нижний отступ (px)", name: "mb", widget: "number", default: 16, min: 0 }
-                  - { label: "Фон панели", name: "bg", widget: "color", default: "#0f1520", allowInput: true }
-                  - { label: "Цвет текста", name: "text", widget: "color", default: "#e6e8eb", allowInput: true }
-                  - { label: "Цвет шапки", name: "head", widget: "color", default: "rgba(255,232,31,.08)", allowInput: true }
-                  - { label: "Цвет границ", name: "border", widget: "color", default: "#223044", allowInput: true }
-                  - { label: "Шрифт заголовков", name: "fontHead", widget: "select", options: ["Russo One","Montserrat","Jura"], default: "Russo One" }
-                  - { label: "Шрифт текста", name: "fontBody", widget: "select", options: ["Montserrat","Jura","Russo One"], default: "Montserrat" }
+                  - label: "Подзаголовок"
+                    name: "subheading"
+                    widget: "object"
+                    fields:
+                      - { label: "Тип", name: "type", widget: "hidden", default: "subheading" }
+                      - { label: "Текст заголовка", name: "title", widget: "string" }
+                      - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: true }
+                      - label: "Уровень в оглавлении"
+                        name: "tocLevel"
+                        widget: "select"
+                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
+                        default: 3
+
+                  - label: "Callout / Врезка"
+                    name: "callout"
+                    widget: "object"
+                    fields:
+                      - { label: "Тип", name: "type", widget: "hidden", default: "callout" }
+                      - { label: "Заголовок (опц.)", name: "title", widget: "string", required: false }
+                      - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: false }
+                      - label: "Уровень в оглавлении"
+                        name: "tocLevel"
+                        widget: "select"
+                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
+                        default: 3
+                      - { label: "Текст (Markdown)", name: "text", widget: "markdown" }
+                      - label: "Стиль"
+                        name: "style"
+                        widget: "object"
+                        collapsed: true
+                        required: false
+                        fields:
+                          - { label: "Верхний отступ", name: "mt", widget: "number", default: 16, min: 0 }
+                          - { label: "Нижний отступ", name: "mb", widget: "number", default: 16, min: 0 }
+                          - { label: "Цвет фона", name: "bg", widget: "color", required: false }
+                          - { label: "Цвет текста", name: "text", widget: "color", required: false }
+
+                  - label: "Таблица"
+                    name: "table"
+                    widget: "object"
+                    fields:
+                      - { label: "Тип", name: "type", widget: "hidden", default: "table" }
+                      - { label: "Заголовок (опц.)", name: "title", widget: "string", required: false }
+                      - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: false }
+                      - label: "Уровень в оглавлении"
+                        name: "tocLevel"
+                        widget: "select"
+                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
+                        default: 3
+                      - label: "Колонки"
+                        name: "columns"
+                        widget: "list"
+                        field: { label: "Колонка", name: "col", widget: "string" }
+                      - label: "Строки"
+                        name: "rows"
+                        widget: "list"
+                        field:
+                          label: "Строка"
+                          name: "row"
+                          widget: "list"
+                          field: { label: "Ячейка", name: "cell", widget: "string" }
+                      - label: "Стиль"
+                        name: "style"
+                        widget: "object"
+                        collapsed: true
+                        required: false
+                        fields:
+                          - { label: "Верхний отступ", name: "mt", widget: "number", default: 16, min: 0 }
+                          - { label: "Нижний отступ", name: "mb", widget: "number", default: 16, min: 0 }
+                          - { label: "Цвет фона", name: "bg", widget: "color", required: false }
+                          - { label: "Цвет текста", name: "text", widget: "color", required: false }
