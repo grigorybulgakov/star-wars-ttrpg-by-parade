@@ -6,14 +6,7 @@
       "parent": "basics",
       "variant": "warning",
       "text": "> **Избегайте** использования официальных логотипов/кадров. Лучше абстрактные текстуры — панели корабля, звёзды.",
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "text": "#e6e8eb",
-        "bar": "#ffe81f",
-        "bg": "rgba(255,232,31,.06)",
-        "fontBody": "Montserrat"
-      }
+      "style": { "mt": 16, "mb": 16, "text": "#e6e8eb", "bar": "#ffe81f", "bg": "rgba(255,232,31,.06)", "fontBody": "Montserrat" }
     }
   ]
 }
