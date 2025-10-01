@@ -29,7 +29,9 @@ collections:
               - label: "Режим даты"
                 name: "dateMode"
                 widget: "select"
-                options: [ {label: "Авто (сегодня)", value: "auto"}, {label: "Ручная", value: "manual"} ]
+                options:
+                  - { label: "Авто (сегодня)", value: "auto" }
+                  - { label: "Ручная", value: "manual" }
                 default: "manual"
               - { label: "Дата (ДД.ММ.ГГГГ или текст)", name: "dateText", widget: "string", required: false }
           - label: "Оглавление (TOC)"
@@ -40,7 +42,9 @@ collections:
                 name: "levels"
                 widget: "select"
                 multiple: true
-                options: [ {label: "H2", value: 2}, {label: "H3", value: 3} ]
+                options:
+                  - { label: "H2", value: 2 }
+                  - { label: "H3", value: 3 }
                 default: [2,3]
 
   - label: "Разделы"
@@ -100,11 +104,7 @@ collections:
                       - { label: "Тип", name: "type", widget: "hidden", default: "subheading" }
                       - { label: "Текст заголовка", name: "title", widget: "string" }
                       - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: true }
-                      - label: "Уровень в оглавлении"
-                        name: "tocLevel"
-                        widget: "select"
-                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
-                        default: 3
+                      - { label: "Уровень (2 или 3)", name: "tocLevel", widget: "number", min: 2, max: 3, default: 3 }
 
                   - label: "Callout / Врезка"
                     name: "callout"
@@ -113,11 +113,7 @@ collections:
                       - { label: "Тип", name: "type", widget: "hidden", default: "callout" }
                       - { label: "Заголовок (опц.)", name: "title", widget: "string", required: false }
                       - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: false }
-                      - label: "Уровень в оглавлении"
-                        name: "tocLevel"
-                        widget: "select"
-                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
-                        default: 3
+                      - { label: "Уровень (2 или 3)", name: "tocLevel", widget: "number", min: 2, max: 3, default: 3 }
                       - { label: "Текст (Markdown)", name: "text", widget: "markdown" }
                       - label: "Стиль"
                         name: "style"
@@ -137,11 +133,7 @@ collections:
                       - { label: "Тип", name: "type", widget: "hidden", default: "table" }
                       - { label: "Заголовок (опц.)", name: "title", widget: "string", required: false }
                       - { label: "Показывать в оглавлении", name: "includeInTOC", widget: "boolean", default: false }
-                      - label: "Уровень в оглавлении"
-                        name: "tocLevel"
-                        widget: "select"
-                        options: [ {label:"H2", value:2}, {label:"H3", value:3} ]
-                        default: 3
+                      - { label: "Уровень (2 или 3)", name: "tocLevel", widget: "number", min: 2, max: 3, default: 3 }
                       - label: "Колонки"
                         name: "columns"
                         widget: "list"
