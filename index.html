@@ -49,6 +49,7 @@
       .callout{background:#f6f7f9;border-color:#000}
       .btn,.toolbar,.no-print{display:none !important}
     }
+    .error{margin-top:16px;padding:12px 14px;border-radius:10px;background:#3a1111;border:1px solid #5b1a1a;color:#ffdcdc}
   </style>
 </head>
 <body>
@@ -56,6 +57,7 @@
     <header class="cover">
       <h1 class="title">Star Wars DnD — Домашние правила</h1>
       <p class="subtitle">Версия 1.0 · Кампания: укажите название</p>
+      <p class="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
       <div class="toolbar no-print" id="toolbar">
         <button class="btn" id="btn-print" onclick="window.print()">Печать в PDF</button>
         <a class="btn" href="#toc">К оглавлению</a>
@@ -72,12 +74,21 @@
 
     <main>
       <div id="cms-root"><div class="panel"><p>Загрузка контента…</p></div></div>
+      <div id="errors"></div>
     </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     marked.setOptions({ gfm: true, breaks: true });
+
+    const showError = (msg) => {
+      const box = document.getElementById('errors');
+      const div = document.createElement('div');
+      div.className = 'error';
+      div.textContent = msg;
+      box.appendChild(div);
+    };
 
     function applyStyle(el, style={}, kind="panel"){
       const { mt=16, mb=16, pad=18, text, accent, bg, bgImage, fontHead, fontBody, head, border, bar } = style || {};
@@ -178,35 +189,44 @@
       });
     }
 
+    async function getJSON(path){
+      try{
+        const res = await fetch(path, {cache:'no-cache'});
+        if(!res.ok) throw new Error(`${path} → HTTP ${res.status}`);
+        return await res.json();
+      }catch(err){
+        showError(`Не удалось загрузить ${path}. ${err.message}`);
+        throw err;
+      }
+    }
+
     (async function(){
       try{
         const [settings, sections, callouts, tables] = await Promise.all([
-          fetch('content/settings.json',{cache:'no-cache'}).then(r=>r.json()),
-          fetch('content/sections.json',{cache:'no-cache'}).then(r=>r.json()),
-          fetch('content/callouts.json',{cache:'no-cache'}).then(r=>r.json()),
-          fetch('content/tables.json',{cache:'no-cache'}).then(r=>r.json())
+          getJSON('./content/settings.json'),
+          getJSON('./content/sections.json'),
+          getJSON('./content/callouts.json'),
+          getJSON('./content/tables.json')
         ]);
 
+        // Заголовок/обложка
+        if (settings?.pageTitle) document.title = settings.pageTitle;
         if (settings?.cover){
-  const { title, subtitle, author, showPrintButton, dateMode, dateText } = settings.cover;
-  const cover = document.querySelector('.cover');
-  if(title) cover.querySelector('.title').textContent = title;
-  if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
-
-  const meta = cover.querySelector('.meta');
-  const dateStr = (dateMode === 'manual' && dateText && dateText.trim())
-    ? dateText.trim()
-    : new Date().toLocaleDateString('ru-RU');
-
-  meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
-
-  if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
-}
-
+          const { title, subtitle, author, showPrintButton, dateMode, dateText } = settings.cover;
+          const cover = document.querySelector('.cover');
+          if(title) cover.querySelector('.title').textContent = title;
+          if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
+          const meta = cover.querySelector('.meta');
+          const dateStr = (dateMode === 'manual' && dateText && dateText.trim())
+            ? dateText.trim()
+            : new Date().toLocaleDateString('ru-RU');
+          meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
+          if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
         } else {
           document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
         }
 
+        // Рендер
         const root = document.getElementById('cms-root');
         root.innerHTML='';
         const sectionNodes = {};
@@ -241,9 +261,7 @@
 
         regenerateTOC(settings);
       }catch(e){
-        console.error(e);
-        document.getElementById('cms-root').innerHTML =
-          '<div class="panel"><p>Не удалось загрузить контент. Проверьте папку <code>content</code>.</p></div>';
+        // ошибки уже показаны через showError
       }
     })();
   </script>
