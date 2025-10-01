@@ -1,4 +1,4 @@
-# ==== АВТОРИЗАЦИЯ ЧЕРЕЗ DECAPBRIDGE ====
+# ==== Авторизация через DecapBridge (git-gateway) ====
 backend:
   name: git-gateway
   repo: grigorybulgakov/star-wars-ttrpg-by-parade
@@ -6,23 +6,42 @@ backend:
   identity_url: https://auth.decapbridge.com/sites/838f2fa5-d281-46f1-b42f-c684786dcfe2
   gateway_url: https://gateway.decapbridge.com
 
-# (необязательно) красивые подписи коммитов
-commit_messages:
-  create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-  update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-  delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-  uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
-  deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
-  openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
-
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 site_url: https://grigorybulgakov.github.io
-
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
-# ==== КОЛЛЕКЦИИ ====
 collections:
+  - label: "Настройки страницы"
+    name: "settings"
+    files:
+      - label: "Глобальные настройки"
+        name: "settings"
+        file: "content/settings.json"
+        fields:
+          - { label: "Заголовок вкладки (HTML <title>)", name: "pageTitle", widget: "string" }
+          - label: "Обложка"
+            name: "cover"
+            widget: "object"
+            fields:
+              - { label: "Заголовок на обложке", name: "title", widget: "string" }
+              - { label: "Подзаголовок", name: "subtitle", widget: "string" }
+              - { label: "Автор / подпись", name: "author", widget: "string" }
+              - { label: "Показывать кнопку «Печать в PDF»", name: "showPrintButton", widget: "boolean", default: true }
+          - label: "Оглавление (TOC)"
+            name: "toc"
+            widget: "object"
+            fields:
+              - label: "Уровни заголовков"
+                name: "levels"
+                widget: "select"
+                multiple: true
+                options:
+                  - { label: "H2", value: 2 }
+                  - { label: "H3", value: 3 }
+                default: [2,3]
+              - { label: "Исключать заголовки callout из TOC", name: "excludeCallouts", widget: "boolean", default: true }
+
   - label: "Разделы страницы"
     name: "sections"
     files:
@@ -36,7 +55,8 @@ collections:
             summary: "{{fields.order}} — {{fields.title}}"
             fields:
               - { label: "Заголовок", name: "title", widget: "string" }
-              - { label: "Порядок (число)", name: "order", widget: "number", default: 1 }
+              - { label: "ID (якорь секции)", name: "id", widget: "string", required: false, hint: "латиница и дефисы, напр. basics, gear, ships" }
+              - { label: "Порядок", name: "order", widget: "number", default: 1, min: 0 }
               - { label: "Содержимое (Markdown)", name: "body", widget: "markdown" }
               - label: "Стиль"
                 name: "style"
@@ -66,7 +86,8 @@ collections:
             summary: "{{fields.order}} — {{fields.title}} ({{fields.variant}})"
             fields:
               - { label: "Заголовок", name: "title", widget: "string", default: "Внимание" }
-              - { label: "Порядок (число)", name: "order", widget: "number", default: 10 }
+              - { label: "Порядок", name: "order", widget: "number", default: 10, min: 0 }
+              - { label: "Родительский ID (вставить в секцию)", name: "parent", widget: "string", required: false, hint: "совпадает с ID секции" }
               - { label: "Вариант", name: "variant", widget: "select", options: ["warning","info","success","danger"], default: "warning" }
               - { label: "Текст (Markdown)", name: "text", widget: "markdown" }
               - label: "Стиль"
@@ -94,7 +115,8 @@ collections:
             summary: "{{fields.order}} — {{fields.title}}"
             fields:
               - { label: "Заголовок", name: "title", widget: "string" }
-              - { label: "Порядок (число)", name: "order", widget: "number", default: 20 }
+              - { label: "Порядок", name: "order", widget: "number", default: 20, min: 0 }
+              - { label: "Родительский ID (вставить в секцию)", name: "parent", widget: "string", required: false }
               - label: "Колонки (3–6)"
                 name: "columns"
                 widget: "list"
