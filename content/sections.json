@@ -104,11 +104,11 @@
             "mb": 10,
             "pad": 10
           },
-          "body": "## Коэффициент уклонения"
+          "body": "### Коэффициент уклонения"
         },
         {
           "type": "callout",
-          "includeInTOC": true,
+          "includeInTOC": false,
           "tocLevel": 3,
           "style": {
             "mt": 10,
