@@ -6,6 +6,6 @@
     "author": "Автор: ГМ Имя Фамилия",
     "dateMode": "manual",
     "dateText": "01.10.2025",
-    "showPrintButton": true
+    "showPrintButton": false
   }
 }
