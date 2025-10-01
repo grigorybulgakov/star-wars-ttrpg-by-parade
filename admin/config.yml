@@ -11,47 +11,46 @@ site_url: https://grigorybulgakov.github.io
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
+# ==== Коллекции ====
 collections:
   - label: "Настройки страницы"
     name: "settings"
     files:
-     - label: "Настройки страницы"
-  name: "settings"
-  files:
-    - label: "Глобальные настройки"
-      name: "settings"
-      file: "content/settings.json"
-      fields:
-        - { label: "Заголовок вкладки (HTML <title>)", name: "pageTitle", widget: "string" }
-        - label: "Обложка"
-          name: "cover"
-          widget: "object"
-          fields:
-            - { label: "Заголовок на обложке", name: "title", widget: "string" }
-            - { label: "Подзаголовок", name: "subtitle", widget: "string" }
-            - { label: "Автор / подпись", name: "author", widget: "string", default: "Автор: вы" }
-            - label: "Режим даты обновления"
-              name: "dateMode"
-              widget: "select"
-              options:
-                - { label: "Авто (сегодня)", value: "auto" }
-                - { label: "Ручная (из поля ниже)", value: "manual" }
-              default: "manual"
-            - { label: "Дата (ручной ввод: ДД.ММ.ГГГГ или любой текст)", name: "dateText", widget: "string", required: false, hint: "Пример: 01.10.2025" }
-            - { label: "Показывать кнопку «Печать в PDF»", name: "showPrintButton", widget: "boolean", default: true }
-        - label: "Оглавление (TOC)"
-          name: "toc"
-          widget: "object"
-          fields:
-            - label: "Уровни заголовков"
-              name: "levels"
-              widget: "select"
-              multiple: true
-              options:
-                - { label: "H2", value: 2 }
-                - { label: "H3", value: 3 }
-              default: [2,3]
-            - { label: "Исключать заголовки callout из TOC", name: "excludeCallouts", widget: "boolean", default: true }
+      - label: "Глобальные настройки"
+        name: "settings"
+        file: "content/settings.json"
+        fields:
+          - { label: "Заголовок вкладки (HTML <title>)", name: "pageTitle", widget: "string" }
+          - label: "Обложка"
+            name: "cover"
+            widget: "object"
+            fields:
+              - { label: "Заголовок на обложке", name: "title", widget: "string" }
+              - { label: "Подзаголовок", name: "subtitle", widget: "string" }
+              - { label: "Автор / подпись", name: "author", widget: "string", default: "Автор: вы" }
+              - label: "Режим даты обновления"
+                name: "dateMode"
+                widget: "select"
+                options:
+                  - { label: "Авто (сегодня)", value: "auto" }
+                  - { label: "Ручная (из поля ниже)", value: "manual" }
+                default: "manual"
+              - { label: "Дата (ручной ввод: ДД.ММ.ГГГГ или любой текст)", name: "dateText", widget: "string", required: false, hint: "Пример: 01.10.2025" }
+              - { label: "Показывать кнопку «Печать в PDF»", name: "showPrintButton", widget: "boolean", default: true }
+          - label: "Оглавление (TOC)"
+            name: "toc"
+            widget: "object"
+            fields:
+              - label: "Уровни заголовков"
+                name: "levels"
+                widget: "select"
+                multiple: true
+                options:
+                  - { label: "H2", value: 2 }
+                  - { label: "H3", value: 3 }
+                default: [2,3]
+              - { label: "Исключать заголовки callout из TOC", name: "excludeCallouts", widget: "boolean", default: true }
+
   - label: "Разделы страницы"
     name: "sections"
     files:
