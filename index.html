@@ -31,22 +31,16 @@
     p{margin:10px 0}
     .panel{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15)), var(--panel); border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
     .callout{border-left:4px solid var(--accent);padding:12px 14px;background:rgba(255,232,31,.06);border-radius:10px}
-    .callout strong{letter-spacing:.02em}
     .sw-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:12px;border:1px solid var(--border)}
     .sw-table th,.sw-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
     .sw-table thead th{font-weight:700;text-align:left;background:rgba(255,232,31,.08)}
     .sw-table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-    .rule-tag{display:inline-block;border:1px solid var(--border);background:#0c131e;padding:2px 8px;border-radius:999px;font-size:12px;color:#9aa4b2}
-    .page-break{break-after:page}
     @page{size:A4;margin:16mm}
     @media print{
       body{background:#fff;color:#000}
       .container{margin:0;max-width:100%;padding:0}
       .cover,.panel,.toc{background:#fff;border-color:#ddd;box-shadow:none}
       .title{text-shadow:none;color:#000}
-      a{color:#000;text-decoration:none}
-      .divider{background:#000;opacity:.1}
-      .callout{background:#f6f7f9;border-color:#000}
       .btn,.toolbar,.no-print{display:none !important}
     }
     .error{margin-top:16px;padding:12px 14px;border-radius:10px;background:#3a1111;border:1px solid #5b1a1a;color:#ffdcdc}
@@ -57,11 +51,11 @@
     <header class="cover">
       <h1 class="title">Star Wars DnD — Домашние правила</h1>
       <p class="subtitle">Версия 1.0 · Кампания: укажите название</p>
-      <p class="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
-      <div class="toolbar no-print" id="toolbar">
-        <button class="btn" id="btn-print" onclick="window.print()">Печать в PDF</button>
+      <p class="meta" id="meta">Автор: вы · Последнее обновление: <span id="last-upd">—</span></p>
+      <div class="toolbar no-print">
+        <button class="btn" onclick="window.print()">Печать в PDF</button>
         <a class="btn" href="#toc">К оглавлению</a>
-        <a class="btn" href="#cms-root">К разделам</a>
+        <a class="btn" href="#sections-root">К разделам</a>
       </div>
     </header>
 
@@ -73,16 +67,16 @@
     </nav>
 
     <main>
-      <div id="cms-root"><div class="panel"><p>Загрузка контента…</p></div></div>
+      <div id="sections-root"><div class="panel"><p>Загрузка…</p></div></div>
       <div id="errors"></div>
     </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    marked.setOptions({ gfm: true, breaks: true });
+    marked.setOptions({ gfm:true, breaks:true });
 
-    const showError = (msg) => {
+    const showError = msg => {
       const box = document.getElementById('errors');
       const div = document.createElement('div');
       div.className = 'error';
@@ -90,81 +84,82 @@
       box.appendChild(div);
     };
 
-    function applyStyle(el, style={}, kind="panel"){
-      const { mt=16, mb=16, pad=18, text, accent, bg, bgImage, fontHead, fontBody, head, border, bar } = style || {};
-      el.style.marginTop = (mt||0)+'px';
-      el.style.marginBottom = (mb||0)+'px';
-      if(kind==="panel"){
-        el.style.padding = (pad||18)+'px';
-        if(bg) el.style.background = bg;
-        if(text) el.style.color = text;
-        if(bgImage){
-          el.style.backgroundImage = `url(${bgImage})`;
-          el.style.backgroundSize = 'cover';
-          el.style.backgroundRepeat = 'no-repeat';
-        }
+    const el = (tag, cls) => { const x=document.createElement(tag); if(cls) x.className=cls; return x; };
+
+    function applyBoxStyle(node, style={}){
+      const { mt=16, mb=16, pad=18, bg, text } = style;
+      node.style.marginTop = mt+'px';
+      node.style.marginBottom = mb+'px';
+      if(pad!=null) node.style.padding = pad+'px';
+      if(bg) node.style.background = bg;
+      if(text) node.style.color = text;
+    }
+
+    function hTag(level, text){ const h = document.createElement('h'+level); h.textContent=text; return h; }
+
+    function renderBlock(block){
+      const type = block.type || 'markdown';
+
+      if(type === 'markdown'){
+        const box = el('div');
+        applyBoxStyle(box, block.style);
+        box.innerHTML = marked.parse(block.body||'');
+        return box;
       }
-      if(kind==="callout"){
-        el.style.padding = (pad||12)+'px';
-        if(bg) el.style.background = bg;
-        if(bar) el.style.borderLeft = `4px solid ${bar}`;
-        if(text) el.style.color = text;
+
+      if(type === 'subheading'){
+        const lvl = block.tocLevel===3 ? 3 : 2;
+        const h = hTag(lvl, block.title||'Подзаголовок');
+        if(block.includeInTOC===false) h.setAttribute('data-toc','off');
+        return h;
       }
-      if(fontHead) el.style.setProperty('--font-head', fontHead);
-      if(fontBody) el.style.setProperty('--font-body', fontBody);
+
+      if(type === 'callout'){
+        const wrap = el('div','callout'); applyBoxStyle(wrap, block.style);
+        if(block.title){ const h = hTag(block.tocLevel===3?3:2, block.title); if(block.includeInTOC===false) h.setAttribute('data-toc','off'); wrap.appendChild(h); }
+        const inner = el('div'); inner.innerHTML = marked.parse(block.text||''); wrap.appendChild(inner);
+        return wrap;
+      }
+
+      if(type === 'table'){
+        const wrap = el('div'); applyBoxStyle(wrap, block.style);
+        if(block.title){ const h = hTag(block.tocLevel===3?3:2, block.title); if(block.includeInTOC===false) h.setAttribute('data-toc','off'); wrap.appendChild(h); }
+        const tbl = el('table','sw-table');
+        const thead = el('thead'); const trh = el('tr');
+        (block.columns||[]).forEach(c=>{ const th=el('th'); th.textContent=c; trh.appendChild(th); });
+        thead.appendChild(trh); tbl.appendChild(thead);
+        const tbody = el('tbody');
+        (block.rows||[]).forEach(r=>{
+          const tr=el('tr');
+          (r||[]).forEach(v=>{ const td=el('td'); td.textContent=v; tr.appendChild(td); });
+          tbody.appendChild(tr);
+        });
+        tbl.appendChild(tbody); wrap.appendChild(tbl);
+        return wrap;
+      }
+
+      // fallback
+      const box = el('div'); box.textContent = '[неизвестный блок]'; return box;
     }
 
-    function renderSection(item){
-      const wrap = document.createElement('section');
-      wrap.className = 'panel';
-      applyStyle(wrap, item.style || {}, 'panel');
-      const h = document.createElement('h2');
-      h.textContent = item.title || 'Раздел';
-      const body = document.createElement('div');
-      body.innerHTML = marked.parse(item.body || '');
-      if(item.style && item.style.fontHead) h.style.fontFamily = item.style.fontHead;
-      if(item.style && item.style.fontBody) body.style.fontFamily = item.style.fontBody;
-      wrap.appendChild(h); wrap.appendChild(body);
-      return wrap;
-    }
+    function renderSection(section){
+      const panel = el('section','panel'); applyBoxStyle(panel, section.style);
+      // заголовок H2, можно скрыть (empty title)
+      if(section.title){
+        const h = hTag(2, section.title);
+        if(section.includeInTOC === false) h.setAttribute('data-toc','off');
+        panel.appendChild(h);
+      }
 
-    function renderCallout(item){
-      const wrap = document.createElement('section');
-      applyStyle(wrap, item.style || {}, 'callout');
-      const inner = document.createElement('div');
-      inner.className = 'callout';
-      const h = document.createElement('h3');
-      h.textContent = item.title || 'Внимание';
-      h.setAttribute('data-toc','callout');
-      const body = document.createElement('div');
-      body.innerHTML = marked.parse(item.text || '');
-      if(item.style && item.style.fontHead) h.style.fontFamily = item.style.fontHead;
-      if(item.style && item.style.fontBody) body.style.fontFamily = item.style.fontBody;
-      inner.appendChild(h); inner.appendChild(body); wrap.appendChild(inner);
-      return wrap;
-    }
-
-    function renderTable(item){
-      const wrap = document.createElement('section');
-      wrap.className = 'panel';
-      applyStyle(wrap, item.style || {}, 'panel');
-      const h = document.createElement('h2'); h.textContent = item.title || 'Таблица';
-      const table = document.createElement('table'); table.className='sw-table';
-      const thead = document.createElement('thead'); const trh = document.createElement('tr');
-      (item.columns||[]).forEach(c=>{ const th=document.createElement('th'); th.textContent=c; if(item.style && item.style.head) th.style.background=item.style.head; trh.appendChild(th); });
-      thead.appendChild(trh);
-      const tbody = document.createElement('tbody');
-      (item.rows||[]).forEach(r=>{
-        const tr=document.createElement('tr');
-        [r.c1,r.c2,r.c3,r.c4,r.c5,r.c6].filter(v=>v!==undefined).forEach(val=>{ const td=document.createElement('td'); td.textContent=val; tr.appendChild(td); });
-        tbody.appendChild(tr);
+      (section.blocks||[]).forEach(b => {
+        const node = renderBlock(b);
+        panel.appendChild(node);
       });
-      table.appendChild(thead); table.appendChild(tbody);
-      wrap.appendChild(h); wrap.appendChild(table);
-      return wrap;
+
+      return panel;
     }
 
-    function regenerateTOC(settings){
+    function regenTOC(settings){
       const main = document.querySelector('main');
       const toc = document.getElementById('toc-list');
       if(!main || !toc) return;
@@ -172,9 +167,9 @@
       const levels = (settings?.toc?.levels?.length ? settings.toc.levels : [2,3]).sort();
       const selector = levels.map(l => `h${l}`).join(', ');
       let hs = [...main.querySelectorAll(selector)];
-      if(settings?.toc?.excludeCallouts){
-        hs = hs.filter(h => h.getAttribute('data-toc') !== 'callout');
-      }
+      // исключать элементы, помеченные data-toc="off"
+      hs = hs.filter(h => h.getAttribute('data-toc') !== 'off');
+
       toc.innerHTML = '';
       let ol = toc, lastLevel = Math.min(...levels);
       hs.forEach((h, idx)=>{
@@ -190,79 +185,39 @@
     }
 
     async function getJSON(path){
-      try{
-        const res = await fetch(path, {cache:'no-cache'});
-        if(!res.ok) throw new Error(`${path} → HTTP ${res.status}`);
-        return await res.json();
-      }catch(err){
-        showError(`Не удалось загрузить ${path}. ${err.message}`);
-        throw err;
-      }
+      const r = await fetch(path, {cache:'no-cache'});
+      if(!r.ok){ showError(`${path}: HTTP ${r.status}`); throw new Error(path); }
+      return r.json();
     }
 
     (async function(){
       try{
-        const [settings, sections, callouts, tables] = await Promise.all([
+        const [settings, sectionsFile] = await Promise.all([
           getJSON('./content/settings.json'),
-          getJSON('./content/sections.json'),
-          getJSON('./content/callouts.json'),
-          getJSON('./content/tables.json')
+          getJSON('./content/sections.json')
         ]);
 
-        // Заголовок/обложка
+        // Обложка: автор/дата управляются из settings
         if (settings?.pageTitle) document.title = settings.pageTitle;
         if (settings?.cover){
-          const { title, subtitle, author, showPrintButton, dateMode, dateText } = settings.cover;
-          const cover = document.querySelector('.cover');
-          if(title) cover.querySelector('.title').textContent = title;
-          if(subtitle) cover.querySelector('.subtitle').textContent = subtitle;
-          const meta = cover.querySelector('.meta');
-          const dateStr = (dateMode === 'manual' && dateText && dateText.trim())
-            ? dateText.trim()
-            : new Date().toLocaleDateString('ru-RU');
-          meta.textContent = (author || 'Автор:') + ' · Последнее обновление: ' + dateStr;
-          if (showPrintButton === false) document.getElementById('btn-print').style.display='none';
-        } else {
-          document.getElementById('last-upd').textContent = new Date().toLocaleDateString('ru-RU');
+          const meta = document.getElementById('meta');
+          const { author, dateMode, dateText } = settings.cover;
+          const dateStr = (dateMode === 'manual' && dateText?.trim()) ? dateText.trim() : new Date().toLocaleDateString('ru-RU');
+          meta.innerHTML = `${author || 'Автор: вы'} · Последнее обновление: <span>${dateStr}</span>`;
         }
 
-        // Рендер
-        const root = document.getElementById('cms-root');
-        root.innerHTML='';
-        const sectionNodes = {};
-        (sections.items||[])
+        const root = document.getElementById('sections-root');
+        root.innerHTML = '';
+        (sectionsFile.items||[])
           .sort((a,b)=>(a.order||0)-(b.order||0))
-          .forEach(item=>{
-            const id = (item.id && String(item.id).trim()) ||
-                       (item.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-            const node = renderSection(item);
-            if(id) node.id = id;
-            sectionNodes[id] = node;
+          .forEach(sec=>{
+            const node = renderSection(sec);
+            if(sec.id) node.id = sec.id;
             root.appendChild(node);
           });
 
-        (callouts.items||[])
-          .sort((a,b)=>(a.order||0)-(b.order||0))
-          .forEach(item=>{
-            const parent = item.parent && String(item.parent).trim();
-            const node = renderCallout(item);
-            if(parent && sectionNodes[parent]) sectionNodes[parent].appendChild(node);
-            else root.appendChild(node);
-          });
-
-        (tables.items||[])
-          .sort((a,b)=>(a.order||0)-(b.order||0))
-          .forEach(item=>{
-            const parent = item.parent && String(item.parent).trim();
-            const node = renderTable(item);
-            if(parent && sectionNodes[parent]) sectionNodes[parent].appendChild(node);
-            else root.appendChild(node);
-          });
-
-        regenerateTOC(settings);
-      }catch(e){
-        // ошибки уже показаны через showError
-      }
+        regenTOC(settings);
+      }catch(e){}
     })();
   </script>
 </body>
