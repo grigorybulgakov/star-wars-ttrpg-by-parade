@@ -35,7 +35,7 @@ collections:
                   - { label: "Авто (сегодня)", value: "auto" }
                   - { label: "Ручная (из поля ниже)", value: "manual" }
                 default: "manual"
-              - { label: "Дата (ручной ввод: ДД.ММ.ГГГГ или любой текст)", name: "dateText", widget: "string", required: false, hint: "Пример: 01.10.2025" }
+              - { label: "Дата (ДД.ММ.ГГГГ или любой текст)", name: "dateText", widget: "string", required: false, hint: "Пример: 01.10.2025" }
               - { label: "Показывать кнопку «Печать в PDF»", name: "showPrintButton", widget: "boolean", default: true }
           - label: "Оглавление (TOC)"
             name: "toc"
