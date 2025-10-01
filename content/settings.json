@@ -1,0 +1,16 @@
+{
+  "pageTitle": "Star Wars TTRPG — Домашние правила",
+  "cover": {
+    "title": "Star Wars DnD — Домашние правила",
+    "subtitle": "Версия 1.0 · Кампания: укажите название",
+    "author": "Автор: вы",
+    "showPrintButton": true
+  },
+  "toc": {
+    "levels": [
+      2,
+      3
+    ],
+    "excludeCallouts": true
+  }
+}

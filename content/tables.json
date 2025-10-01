@@ -3,6 +3,7 @@
     {
       "title": "Атрибуты и модификаторы",
       "order": 4,
+      "parent": "characters",
       "columns": [
         "Параметр",
         "База",
@@ -35,32 +36,6 @@
         "fontHead": "Russo One",
         "fontBody": "Montserrat"
       }
-    },
-    {
-      "order": 2,
-      "style": {
-        "mt": 16,
-        "mb": 16,
-        "bg": "#0f1520",
-        "text": "#e6e8eb",
-        "head": "rgba(255,232,31,.08)",
-        "border": "#223044",
-        "fontHead": "Russo One",
-        "fontBody": "Montserrat"
-      },
-      "title": "Броня",
-      "columns": [
-        "Легкая",
-        "Средняя",
-        "Тяжелая"
-      ],
-      "rows": [
-        {
-          "c1": "+1",
-          "c2": "+2",
-          "c3": "+3"
-        }
-      ]
     }
   ]
 }
