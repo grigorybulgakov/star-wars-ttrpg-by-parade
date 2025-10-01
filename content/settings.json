@@ -1,16 +1,15 @@
 {
   "pageTitle": "Star Wars TTRPG — Домашние правила",
   "cover": {
-    "title": "Star Wars TTRPG",
-    "subtitle": "Версия 1.0",
-    "author": "Автор: Григорий Булгаков",
-    "showPrintButton": false
+    "title": "Star Wars DnD — Домашние правила",
+    "subtitle": "Версия 1.0 · Кампания: укажите название",
+    "author": "Автор: вы",
+    "dateMode": "auto",         // "auto" — брать сегодняшнюю; "manual" — взять dateText
+    "dateText": "03.10.2025",     // ручная дата в формате ДД.ММ.ГГГГ (или любой текст)
+    "showPrintButton": true
   },
   "toc": {
-    "levels": [
-      2,
-      3
-    ],
+    "levels": [2, 3],
     "excludeCallouts": true
   }
 }
