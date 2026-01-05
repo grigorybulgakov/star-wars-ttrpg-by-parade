@@ -74,7 +74,7 @@
         "pad": 18
       },
       "title": "Лечение",
-      "id": "gear",
+      "id": "basics",
       "blocks": [
         {
           "type": "markdown",
@@ -323,6 +323,106 @@
           },
           "title": "Лечение",
           "text": "Для примера мы возьмем Техспособность **Заряд Колто** ([Kolto Pack](https://sw5e.com/characters/techPowers)) с \"базовым\" лечением 1к4 + модификатор характеристики для Техспособностей. \n\nТакже лечение всегда имеет максимальное значение на костях.\n\n* Пример 1 — скажем что **Заряд Колто** 1-го уровня использует персонаж с модификатором характеристики для Техспособности 14. Это значит, что сила лечения будет равняться **2к4+2**. Так как для лечения значение костей всегда имеет максимальное значение, то итоговым результатом будет — 4+4+2=**10**\n* Пример 2 — скажем что **Заряд Колто** 3-го уровня использует персонаж с модификатором характеристики для Техспособности 14. Это значит, что сила лечения будет равняться **6к4+2**, так как за каждый уровень к этой Техспособности добавляется еще одна кость **1к4**, что в этих правилах равняется **2к4**. Так как для лечения значение костей всегда имеет максимальное значение, то итоговым результатом будет — 4+4+4+4+4+4+2=**26**"
+        }
+      ],
+      "id": "basics"
+    },
+    {
+      "order": 8,
+      "includeInTOC": true,
+      "style": {
+        "mt": 16,
+        "mb": 16,
+        "pad": 18
+      },
+      "title": "REDACTED",
+      "id": "basics",
+      "blocks": [
+        {
+          "type": "markdown",
+          "style": {
+            "mt": 16,
+            "mb": 16,
+            "pad": 18
+          },
+          "body": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "title": "Путь Сарлакка",
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "title": "Путь Исаламири",
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED",
+          "title": "Путь Майнока"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED",
+          "title": "Путь Мышеястреба"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED",
+          "title": "Путь Крайт-дракона"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED",
+          "title": "Путь Ранкора"
+        },
+        {
+          "type": "callout",
+          "includeInTOC": true,
+          "tocLevel": 3,
+          "style": {
+            "mt": 16,
+            "mb": 16
+          },
+          "text": "REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED REDACTED",
+          "title": "Путь Вонскра"
         }
       ]
     }
