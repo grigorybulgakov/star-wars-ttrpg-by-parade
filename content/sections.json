@@ -73,6 +73,16 @@
         "mb": 16,
         "pad": 18
       },
+      "title": "Лечение"
+    },
+    {
+      "order": 4,
+      "includeInTOC": true,
+      "style": {
+        "mt": 16,
+        "mb": 16,
+        "pad": 18
+      },
       "title": "Критическое попадание",
       "blocks": [
         {
@@ -97,7 +107,7 @@
       ]
     },
     {
-      "order": 4,
+      "order": 5,
       "includeInTOC": true,
       "style": {
         "mt": 16,
@@ -230,7 +240,7 @@
       ]
     },
     {
-      "order": 5,
+      "order": 6,
       "includeInTOC": true,
       "style": {
         "mt": 16,
