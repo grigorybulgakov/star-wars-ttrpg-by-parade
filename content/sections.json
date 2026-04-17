@@ -269,6 +269,27 @@
         "mb": 16,
         "pad": 18
       },
+      "title": "Дополнительное снаряжение",
+      "blocks": [
+        {
+          "type": "markdown",
+          "style": {
+            "mt": 16,
+            "mb": 16,
+            "pad": 18
+          },
+          "body": "### Аптечки"
+        }
+      ]
+    },
+    {
+      "order": 7,
+      "includeInTOC": true,
+      "style": {
+        "mt": 16,
+        "mb": 16,
+        "pad": 18
+      },
       "title": "Отдых",
       "blocks": [
         {
@@ -284,7 +305,7 @@
       "id": "gear"
     },
     {
-      "order": 7,
+      "order": 8,
       "includeInTOC": true,
       "style": {
         "mt": 16,
@@ -328,7 +349,7 @@
       "id": "basics"
     },
     {
-      "order": 8,
+      "order": 9,
       "includeInTOC": true,
       "style": {
         "mt": 16,
